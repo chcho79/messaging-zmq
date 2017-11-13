@@ -1,0 +1,111 @@
+=========== GO Edge-messaging framework guide ==========
+
+############ Pre-requisite for building EMF SDK ############
+
+ (I) GO installation to build EMF SDK. [Version used for EMF is go1.9]
+     Follow the instruction given at: https://golang.org/doc/install
+
+     Guide to set ENV variables:
+     (a) Open profile file:
+         $vi ~/.profile
+     (b) Add below lines:
+         export PATH=$PATH:/usr/local/go/bin
+         export GOPATH=$HOME/go
+         export PATH=$PATH:$GOPATH/bin
+     (c) Save and close
+
+ (II) Install ZeroMQ go binding:
+      (a) Install libzmq cpp library:
+          (i) echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" >> /etc/apt/sources.list
+              Note: If permission denied error comes in this step, Follow the below instructions:
+                    - Goto /etc/apt/sources.list
+                    - Add the below line:
+                      deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./
+                    - Save and close it.
+         (ii)  wget -q https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key  -O- | sudo apt-key add -
+         (iii) sudo apt-get install libzmq3-dev
+
+         Above instructions are given at: http://zeromq.org/intro:get-the-software
+
+      (b) $ go get github.com/pebbe/zmq4
+          For guide please refer: https://github.com/pebbe/zmq4
+
+ (III) go protocol buffer [protobuf]:
+       $ go get -u github.com/golang/protobuf/protoc-gen-go
+
+ (IV)  go logger [zap]:
+       $ go get -u go.uber.org/zap
+
+############  Build instructions ############
+
+(A)Using Linux command line:
+
+1. Copy EMF go SDK [ ~/MessageFW/EMF/go ] to GO workspace:
+   /home/{UserName}/go/src
+
+   Note: Make sure three directories are there in /home/{UserName}/go folder: src, pkg and bin
+
+2. Build & install EMF SDK:
+   Goto: /home/{UserName}/go/src/go/emf
+
+   $ go build
+   $ go install
+
+3. On successful build & install:
+   - It will create a emf package [emf.a] in:
+	 /home/{UserName}/go/pkg/{arch}/go
+
+4. Build & Run the subscriber sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - Build subscriber sample:
+     :- $ go build subscriber.go
+     :- It will make a executable for subscriber sample in same directory.
+
+   - Run the subscriber sample:
+     $ ./subscriber
+
+   - On successful running it will show following logs:
+     EMF initialized
+     [Initialize] Error code is: 0
+     Enter 1 for General Event testing
+     Enter 2 for Topic Based delivery
+
+5. Build & Run the publisher sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - Build publisher sample:
+     :- $ go build publisher.go
+     :- It will make a executable for subscriber sample in same directory.
+
+   - Run the publisher sample:
+     $ ./publisher
+
+   - On successful running it will show following logs:
+     EMF initialized
+     [Initialize] Error code is: 0
+     Enter 1 for General Event testing
+     Enter 2 for Topic Based delivery
+
+############ Usage guide [For micro-services] ############
+
+1. The micro-service which wants to use EMF GO SDK has to import emf package:
+   - import go/emf
+
+2. Refer EMF sample applications to use EMF SDK APIs. [~/EMF/go/samples]
+
+############ Generating godoc for EMF SDK ############
+
+1. After installing the EMF go SDK, godoc can be generated using following command:
+   $ godoc -html go/emf  > emf.html
+
+2. Open the emf.html in web browser.
+
+Note: Refer guide for trying more options: https://godoc.org/golang.org/x/tools/cmd/godoc
+
+############ Running static analyzer for EMF SDK ############
+
+1. Goto: /home/{UserName}/go/src/go/emf
+
+2. Run the below command:
+   $ go tool vet -all .
