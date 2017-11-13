@@ -1,13 +1,15 @@
 #!/bin/sh
 PROJECT_ROOT=$(pwd)
 echo $PROJECT_ROOT
-mkdir ../../../dependencys
-cd ../../../dependencys
+mkdir ../../dependencys
+cd ../../dependencys
 DEP_ROOT=$(pwd)
 
 #Clone and install core-domain service
 cd $DEP_ROOT
-./build.sh
+git clone https://github.com/edgexfoundry/core-domain.git
+cd core-domain
+mvn install -Dmaven.test.skip=true -U
 
 #Clone and install support-logging-client service
 cd $DEP_ROOT
