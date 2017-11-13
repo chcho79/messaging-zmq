@@ -1,0 +1,49 @@
+################ EMF build script ##################
+
+import os
+
+Import('env')
+
+emf_env = env.Clone()
+target_os = emf_env.get('TARGET_OS')
+
+if emf_env.get('RELEASE'):
+    emf_env.AppendUnique(CCFLAGS=['-Os'])
+else:
+    emf_env.AppendUnique(CCFLAGS=['-g'])
+
+emf_env.AppendUnique(CPPPATH=[
+         './extlibs/zmq',
+        './protobuf',
+        './include',
+        './include/logger',
+        './src'
+])
+
+emf_env.PrependUnique(LIBS=['zmq', 'protobuf'])
+
+if target_os not in ['windows']:
+    emf_env.AppendUnique(
+        CXXFLAGS=['-O2', '-g', '-Wall', '-fmessage-length=0', '-std=c++0x'])
+
+if target_os not in ['windows']:
+    emf_env.AppendUnique(LINKFLAGS=['-Wl,--no-undefined'])
+
+if target_os in ['linux']:
+    emf_env.AppendUnique(LIBS=['pthread'])
+
+EMF_DIR = '.'
+emf_env.AppendUnique(emf_src = [emf_env.Glob(os.path.join(EMF_DIR, 'src', '*.cpp')),
+                                emf_env.Glob(os.path.join(EMF_DIR, 'src', 'logger', '*.cpp')),
+                                emf_env.Glob(os.path.join(EMF_DIR, 'protobuf', '*.cc'))])
+
+emfshared = emf_env.SharedLibrary('emf', emf_env.get('emf_src'))
+emfstatic = emf_env.StaticLibrary('emf', emf_env.get('emf_src'))
+
+# Go to build EMF sample apps
+if target_os == 'linux':
+       SConscript('samples/SConscript')
+
+# Go to build EMF unit test cases
+if target_os == 'linux':
+       SConscript('unittests/SConscript')
