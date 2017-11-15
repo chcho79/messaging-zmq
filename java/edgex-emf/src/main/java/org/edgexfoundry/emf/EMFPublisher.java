@@ -35,9 +35,6 @@ public class EMFPublisher {
      *
      * @param port
      *            port for publishing message/events.
-     * @param msgType
-     *            Message type of the message/event to be published on socket.
-     *            {@link EMFMessageType}
      * @param callback
      *            {@link EMFCallback}
      */
@@ -126,15 +123,16 @@ public class EMFPublisher {
     /**
      * Publish events on a specific topic on socket for subscribers.
      *
+     * Note (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
      * @param topic
      *            Topic on which event needs to be published.
      * @param event
      *            {@link Event}
      * @return {@link EMFErrorCode}
-     *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode publish(String topic, Event event) {
         if (null == mPublisher || null == event) {
@@ -186,15 +184,17 @@ public class EMFPublisher {
      * the topic in list, if it failed to publish event it will return
      * EMF_ERROR/EMF_INVALID_TOPIC.
      *
-     * @param topic
+     * Note: (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
+     * @param topics
      *            Topic on which event needs to be published.
      * @param event
      *            {@link Event}
      * @return {@link EMFErrorCode}
      *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode publish(List<String> topics, Event event) {
         if (null == event) {
@@ -292,7 +292,7 @@ public class EMFPublisher {
         ZMQ.Socket socket = mContext.socket(ZMQ.PAIR);
         if (socket != null) {
             result = socket.connect(address);
-            logger.info("Pair socket connection result: "+ result);
+            logger.info("Pair socket connection result: " + result);
         } else {
             logger.info("Pair socket creation failed");
         }

@@ -49,9 +49,6 @@ public class EMFSubscriber {
      *            IP address
      * @param port
      *            port number
-     * @param msgType
-     *            Message type of the message/event to be received from
-     *            publisher. {@link EMFMessageType}
      * @param callback
      *            {@link EMFCallback}
      */
@@ -101,6 +98,9 @@ public class EMFSubscriber {
 
         /**
          * Invoked when message is received for a specific topic.
+         *
+         * @param topic
+         *            Topic for the received event.
          *
          * @param event
          *            {@link Event}
@@ -201,13 +201,14 @@ public class EMFSubscriber {
     /**
      * Subscribe for event/messages on a particular topic.
      *
+     * Note (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
      * @param topic
      *            Topic to be subscribed.
      * @return {@link EMFErrorCode}
-     *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode subscribe(String topic) {
         // validate the topic
@@ -246,13 +247,14 @@ public class EMFSubscriber {
      * in list, if it failed to subscribe events it will return
      * EMF_ERROR/EMF_INVALID_TOPIC.
      *
-     * @param topic
+     * Note: (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
+     * @param topics
      *            List of topics to be subscribed.
      * @return {@link EMFErrorCode}
-     *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode subscribe(List<String> topics) {
         if (null == topics) {
@@ -331,13 +333,14 @@ public class EMFSubscriber {
     /**
      * Un-subscribe for a specific topic events.
      *
+     * Note: (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
      * @param topic
      *            topic to be unsubscribed.
      * @return {@link EMFErrorCode}
-     *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode unSubscribe(String topic) {
         // validate topic
@@ -376,13 +379,14 @@ public class EMFSubscriber {
      * if it failed to unsubscribe events it will return
      * EMF_ERROR/EMF_INVALID_TOPIC.
      *
+     * Note: (1) Topic name should be as path format. For example:
+     * home/livingroom/ (2) Topic name can have letters [a-z, A-z], numerics
+     * [0-9] and special characters _ - . and / (3) Topic will be appended with
+     * forward slash [/] in case, if application has not appended it.
+     *
      * @param topics
      *            List of topics to be unsubscribed.
      * @return {@link EMFErrorCode}
-     *
-     * @note (1) Topic name should be as path format. For example:
-     *       home/livingroom/ (2) Topic name can have letters [a-z, A-z],
-     *       numerics [0-9] and special characters _ - . and /
      */
     public EMFErrorCode unSubscribe(List<String> topics) {
         if (null == topics) {
