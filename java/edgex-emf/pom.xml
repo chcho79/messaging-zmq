@@ -16,10 +16,12 @@
       <commons.lang3.version>3.5</commons.lang3.version>
       <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
       <spring.boot.plugin.version>1.4.0.RELEASE</spring.boot.plugin.version>
-      <core-domain.version>0.2.0-SNAPSHOT</core-domain.version>
-      <support-logging-client.version>0.2.0-SNAPSHOT</support-logging-client.version>
+      <core-domain.version>0.2.0</core-domain.version>
+      <support-logging-client.version>0.2.0</support-logging-client.version>
       <slf4j.version>1.8.0-alpha2</slf4j.version>
       <protobuf.version>3.3.1</protobuf.version>
+      <nexusproxy>https://nexus.edgexfoundry.org</nexusproxy>
+      <repobasepath>content/repositories</repobasepath>
    </properties>
    <dependencies>
       <dependency>
@@ -83,4 +85,11 @@
          </plugin>
       </plugins>
    </build>
+   <repositories>
+      <repository>
+         <id>releases</id>
+         <name>EdgeX Releases Repository</name>
+         <url>${nexusproxy}/${repobasepath}/releases</url>
+      </repository>
+   </repositories>
 </project>
