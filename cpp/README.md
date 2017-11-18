@@ -102,6 +102,24 @@
 
    - Run the executables: emf_api_test, emf_pub_test and emf_sub_test
 
+############ Unit test and Code coverage report generation ############
+
+Pre-requisite:
+1. Gcovr tool
+   - http://gcovr.com/guide.html#installation
+
+Instructions:
+1. Goto: ~/EMF/cpp/
+
+2. Run the script [generate_report.sh]:
+   $ ./generate_report.sh
+
+   Note: For getting help about script, use the following:
+         $ ./generate_report.sh --help
+
+3. On success, it will generate following reports in [~/EMF/cpp/] :
+   (i)  UnitTestReport
+   (ii) CoverageReport
 
 ############ Usage guide [For micro-services] ############
 
