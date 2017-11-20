@@ -136,18 +136,20 @@ Instructions:
 1. Install tool-chain for arm:
    - sudo apt-get install arm-linux-gnueabi-gcc
    - sudo apt-get install arm-linux-gnueabi-g++
+   - package name can be gcc-arm-linux-gnueabi and g++-arm-linux-gnueabi
 
 2. Build and install zeroMQ [libzmq] for arm architecture:
 
 (a) git clone https://github.com/zeromq/libzmq.git
 (b) $ cd libzmq
-(c) chmod 777 version.sh
-(d) chmod 777 autogen.sh
-(e) ./autogen.sh
-(f) ./configure --host=arm-none-linux-gnueabi CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
-(g) make -j 4
-(h) sudo make install
-(i) sudo ldconfig
+(c) git checkout v4.2.2
+(d) chmod 777 version.sh
+(e) chmod 777 autogen.sh
+(f) ./autogen.sh
+(g) ./configure --host=arm-none-linux-gnueabi CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+(h) make -j 4
+(i) sudo make install
+(j) sudo ldconfig
 
 3. Build protobuf lib for arm architecture:
 
