@@ -16,7 +16,7 @@ host_target_map = {
 
 # Map of target os to possible target architecture
 os_arch_map = {
-		'linux': ['x86', 'x86_64'],
+		'linux': ['x86', 'x86_64', 'arm', 'arm64'],
 		'windows': ['x86', 'amd64', 'arm']
 }
 
@@ -81,6 +81,10 @@ help_vars.AddVariables(
                  'Target platform',
                  default=host,
                  allowed_values=targetlist),
+    EnumVariable('TARGET_ARCH',
+                 'Target architecture',
+                 default=default_arch,
+                 allowed_values=os_arch_map[target_os]),
     EnumVariable('TEST',
                  'Run unit tests',
                  default='0',
@@ -102,6 +106,24 @@ AddOption(
     action='store',
     metavar='DIR',
     help='installation prefix')
+
+
+######################################################################
+# Platform (build target) specific options: toolchain
+######################################################################
+
+targets_support_cc = ['linux']
+
+if target_os in targets_support_cc:
+    # Set cross compile toolchain
+    help_vars.Add('TC_PREFIX',
+                  "Toolchain prefix (Generally only required for cross-compiling)",
+                  default=None)
+    help_vars.Add(
+        PathVariable('TC_PATH',
+                     'Toolchain path (Generally only required for cross-compiling)',
+                     default=None,
+                     validator=PathVariable.PathAccept))
 
 ######################################################################
 # this is where the setup of the construction envionment begins
@@ -125,6 +147,35 @@ if not env.get('VERBOSE'):
     env['SHLINKCOMSTR'] = "Linking shared object $TARGET"
     env['ARCOMSTR'] = "Archiving $TARGET"
     env['RANLIBCOMSTR'] = "Indexing Archive $TARGET"
+
+tc_set_msg = '''
+************************************ Warning **********************************
+* Warning: TC_PREFIX and/or TC_PATH is set in the environment.
+* This means a non-default compilation toolchain will be used.
+* If this is not what you expected you should unset, or it
+* may lead to unexpected results.
+*******************************************************************************
+'''
+sys_root = None
+if target_os in targets_support_cc:
+    prefix = env.get('TC_PREFIX')
+    tc_path = env.get('TC_PATH')
+    if prefix:
+        env.Replace(CC=prefix + env.get('CC', 'gcc'))
+        env.Replace(CXX=prefix + env.get('CXX', 'g++'))
+        env.Replace(AR=prefix + env.get('AR', 'ar'))
+        env.Replace(AS=prefix + env.get('AS', 'as'))
+        env.Replace(RANLIB=prefix + env.get('RANLIB', 'ranlib'))
+
+    if tc_path:
+        env.PrependENVPath('PATH', tc_path)
+        sys_root = os.path.abspath(tc_path + '/../../')
+        env.AppendUnique(CCFLAGS=['--sysroot=' + sys_root])
+        env.AppendUnique(LINKFLAGS=['--sysroot=' + sys_root])
+
+print "tc_path: %s" % tc_path
+print "prefix: %s" % prefix
+print "sys_root: %s" % sys_root
 
 if target_os in ['windows']:
     # UnpackAll.py needs access to system PATH components that SCons
@@ -288,6 +339,8 @@ Export('env')
 ######################################################################
 target_transport = env.get('TARGET_TRANSPORT')
 env.AppendUnique(LIBPATH = [env.get('BUILD_DIR')])
+if (target_os not in ['windows']):
+    env.AppendUnique(CPPDEFINES=['WITH_POSIX'])
 env.AppendUnique(RPATH = [env.get('BUILD_DIR')])
 env.AppendUnique(CPPDEFINES={'EMF_LOG_LEVEL': env.get('LOG_LEVEL')})
 
@@ -299,6 +352,14 @@ env.SConscript('external_builders.scons')
 env.SConscript('external_libs.scons')
 # Load extra options
 SConscript('extra_options.scons')
+
+# Load config of target os
+env.SConscript(target_os + '/SConscript')
+
+if env.get('CROSS_COMPILE'):
+    env.Append(RPATH=env.Literal('\\$$ORIGIN'))
+else:
+    env.Append(RPATH=env.get('BUILD_DIR'))
 
 help_vars.Update(env)
 Help(help_vars.GenerateHelpText(env, sort=cmp))

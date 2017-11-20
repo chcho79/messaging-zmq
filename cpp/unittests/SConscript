@@ -29,7 +29,7 @@ emf_test_env.AppendUnique(LIBS=['emf', 'protobuf'])
 
 if target_os not in ['windows']:
     emf_test_env.AppendUnique(
-        CXXFLAGS=['-O2', '-g', '-Wall', '-fmessage-length=0'])
+        CXXFLAGS=['-O2', '-g', '-Wall', '-fmessage-length=0', '-I/usr/local/include'])
 
 if not emf_test_env.get('RELEASE'):
     emf_test_env.PrependUnique(LIBS=['gcov'])
