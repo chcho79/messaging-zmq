@@ -32,6 +32,11 @@ if target_os not in ['windows']:
 if target_os in ['linux']:
     emf_env.AppendUnique(LIBS=['pthread'])
 
+if target_os in ['linux']:
+    if not env.get('RELEASE'):
+        emf_env.PrependUnique(LIBS=['gcov'])
+        emf_env.AppendUnique(CXXFLAGS=['--coverage'])
+
 EMF_DIR = '.'
 emf_env.AppendUnique(emf_src = [emf_env.Glob(os.path.join(EMF_DIR, 'src', '*.cpp')),
                                 emf_env.Glob(os.path.join(EMF_DIR, 'src', 'logger', '*.cpp')),
