@@ -129,3 +129,118 @@ Instructions:
    Refer sample application sconscript.
 
 2. Refer EMF sample apps to use EMF SDK APIs. [~/EMF/cpp/samples]
+
+
+########## Build EMF SDK for arm architecture [Cross compile on ubuntu] ################
+
+1. Install tool-chain for arm:
+   - sudo apt-get install arm-linux-gnueabi-gcc
+   - sudo apt-get install arm-linux-gnueabi-g++
+
+2. Build and install zeroMQ [libzmq] for arm architecture:
+
+(a) git clone https://github.com/zeromq/libzmq.git
+(b) $ cd libzmq
+(c) chmod 777 version.sh
+(d) chmod 777 autogen.sh
+(e) ./autogen.sh
+(f) ./configure --host=arm-none-linux-gnueabi CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+(g) make -j 4
+(h) sudo make install
+(i) sudo ldconfig
+
+3. Build protobuf lib for arm architecture:
+
+(a) https://github.com/google/protobuf/releases [download protobuf 3.4.0]
+(b) Unzip it
+(c) chmod 777 autogen.sh && ./autogen.sh
+    Note: If autogen.sh give error, add -k option to curl commands in autogen.sh
+(d) ./configure --host=arm-linux CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+(e) make
+   - It will fail, when it try to run protoc arm executable on your machine. [Ignore the build error]
+(f) sudo make install
+   - It will fail, when it try to run protoc arm executable on your machine. [Ignore the build error]
+(g) Copy libs and protoc compiler manually from : src/.libs folder
+    (i)  goto src/.libs
+         $ cd src/.libs
+    (ii) copy libs and protoc:
+         $ sudo cp protoc /usr/bin/
+         $ sudo cp * /usr/local/lib/
+(h) cd ../../
+(i) sudo ldconfig
+
+4. Goto: ~/cpp/
+
+5. scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/
+
+Note:
+1. Update flags as per your installation directories.
+
+!!!!!! Run EMF samples [It will run on arm machine only]!!!!!!!!
+
+1. Subscriber sample application:
+   - Goto: ~/cpp/out/linux/{ARCH}/{MODE}/samples/
+   - export LD_LIBRARY_PATH=../
+   - ./subscriber
+
+2. Publisher sample application:
+   - Goto: ~/cpp/out/linux/{ARCH}/{MODE}/samples/
+   - export LD_LIBRARY_PATH=../
+   - ./publisher
+
+########## Build EMF SDK for arm64 architecture [Cross compile on ubuntu] ################
+
+1. Install tool-chain for arm64:
+   - sudo apt-get install gcc-aarch64-linux-gnu
+   - sudo apt-get install g++-aarch64-linux-gnu
+
+2. Build and Install zeroMQ [libzmq] for arm64 architecture:
+
+(a) git clone https://github.com/zeromq/libzmq.git
+(b) $ cd libzmq
+(c) chmod 777 version.sh
+(d) chmod 777 autogen.sh
+(e) ./autogen.sh
+(f) ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
+(g) make -j 4
+(h) sudo make install
+(i) sudo ldconfig
+
+3. Build protobuf lib for arm64 architecture:
+
+(a) https://github.com/google/protobuf/releases [download protobuf 3.4.0]
+(b) Unzip it
+(c) chmod 777 autogen.sh && ./autogen.sh
+    Note: If autogen.sh give error, add -k option to curl commands in autogen.sh
+(d) ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
+(e) make
+   - It will fail, when it try to run protoc arm64 executable on your machine. [Ignore the build error]
+(f) sudo make install
+   - It will fail, when it try to run protoc arm64 executable on your machine. [Ignore the build error]
+(g) Copy libs and protoc compiler manually from : src/.libs folder
+    (i)  goto src/.libs
+         $ cd src/.libs
+    (ii) copy libs and protoc:
+         $ sudo cp protoc /usr/bin/
+         $ sudo cp * /usr/local/lib/
+(h) cd ../../
+(i) sudo ldconfig
+
+4. Goto: ~/cpp/
+
+5. scons TARGET_ARCH=arm64 TC_PREFIX=/usr/bin/aarch64-linux-gnu- TC_PATH=/usr/bin/
+
+Note:
+1. Update flags as per your installation directories.
+
+!!!!!! Run EMF samples [It will run on arm64 machine only] !!!!!!!!
+
+1. Subscriber sample application:
+   - Goto: ~/cpp/out/linux/{ARCH}/{MODE}/samples/
+   - export LD_LIBRARY_PATH=../
+   - ./subscriber
+
+2. Publisher sample application:
+   - Goto: ~/cpp/out/linux/{ARCH}/{MODE}/samples/
+   - export LD_LIBRARY_PATH=../
+   - ./publisher

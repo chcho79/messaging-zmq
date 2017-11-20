@@ -8,6 +8,8 @@ Import('env')
 
 gtest_env = env.Clone()
 target_os = gtest_env.get('TARGET_OS')
+target_arch = gtest_env.get('TARGET_ARCH')
+
 src_dir = gtest_env.get('SRC_DIR')
 
 targets_need_gtest = ['linux', 'windows']
@@ -55,13 +57,18 @@ if target_os in ['linux']:
         # Run configure on gtest
         print 'Configuring google unit test'
         reconfigure_ran = gtest_env.Configure(gtest_dir, 'autoreconf -i')
-        if env.get('CROSS_COMPILE'):
-            configure_ran = env.Configure(
+
+        if target_arch in ['arm']:
+               configure_ran = env.Configure(
                 gtest_dir,
-                './configure --disable-shared --host=' + env['CROSS_COMPILE'])
+                './configure --disable-shared --host=arm-none-linux-gnueabi CC=/usr/bin/arm-linux-gnueabi-gcc CXX=/usr/bin/arm-linux-gnueabi-g++')
+        elif target_arch in ['arm64']:
+                configure_ran = env.Configure(
+                gtest_dir,
+                './configure --disable-shared --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8')
         else:
-            configure_ran = env.Configure(gtest_dir,
-                                          './configure --disable-shared')
+                configure_ran = env.Configure(gtest_dir,'./configure --disable-shared')
+
         gtest_env.Depends(configure_ran, reconfigure_ran)
 
     # Run make on gtest
