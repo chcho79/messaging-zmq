@@ -109,3 +109,113 @@ Note: Refer guide for trying more options: https://godoc.org/golang.org/x/tools/
 
 2. Run the below command:
    $ go tool vet -all .
+
+@@@@@@@@ Pre-assumption for EMF GO SDK build for arm/arm64 architecture @@@@@@@@@@@@@@@
+
+Linux machine, on which you are going to do cross compilation for arm and arm64 architecture,
+you have built the EMF SDK for x86 or x86_64 architecture.
+If not, please see the above sections for building and installing EMF SDK.
+
+########## Build EMF SDK for arm architecture [Cross compile on ubuntu] ################
+
+1. Install tool-chain for arm:
+   - sudo apt-get install arm-linux-gnueabi-gcc
+   - sudo apt-get install arm-linux-gnueabi-g++
+
+2. Build and install zeroMQ [libzmq] for arm architecture:
+
+(a) git clone https://github.com/zeromq/libzmq.git
+(b) $ cd libzmq
+(c) chmod 777 version.sh
+(d) chmod 777 autogen.sh
+(e) ./autogen.sh
+(f) ./configure --host=arm-none-linux-gnueabi CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++
+(g) make -j 4
+(h) sudo make install
+(i) sudo ldconfig
+
+3. Goto: /home/{UserName}/go/src/go/emf
+
+4. CGO_ENABLED=1 CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++ GOOS=linux GOARCH=arm go build
+
+5. CGO_ENABLED=1 CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++ GOOS=linux GOARCH=arm go install
+
+Note:
+1. If you get permission issue in step 5:
+    - Make a folder linux_arm in {GOROOT}/pkg/
+    - Give all permissions to this folder:
+      $ sudo chmod 777 linux_arm/
+
+2. Update flags as per your installation directories.
+
+!!!!!! Build & Run EMF samples !!!!!!!!
+
+1. Subscriber sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - $ CGO_ENABLED=1 CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++ GOOS=linux GOARCH=arm go build subscriber.go
+       :- It will make an arm executable for subscriber sample in same directory.
+
+   - Run the subscriber sample: [It will run on arm machine only]
+     $ ./subscriber
+
+2. Publisher sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - $ CGO_ENABLED=1 CC=arm-linux-gnueabi-gcc CXX=arm-linux-gnueabi-g++ GOOS=linux GOARCH=arm go build publisher.go
+       :- It will make an arm executable for publisher sample in same directory.
+
+   - Run the publisher sample:
+     $ ./publisher
+
+########## Build EMF SDK for arm64 architecture [Cross compile on ubuntu] ################
+
+1. Install tool-chain for arm64:
+   - sudo apt-get install gcc-aarch64-linux-gnu
+   - sudo apt-get install g++-aarch64-linux-gnu
+
+2. Build and Install zeroMQ [libzmq] for arm64 architecture:
+
+(a) git clone https://github.com/zeromq/libzmq.git
+(b) $ cd libzmq
+(c) chmod 777 version.sh
+(d) chmod 777 autogen.sh
+(e) ./autogen.sh
+(f) ./configure --host=aarch64-unknown-linux-gnu CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8
+(g) make -j 4
+(h) sudo make install
+(i) sudo ldconfig
+
+3. Goto: /home/{UserName}/go/src/go/emf
+
+4. CGO_ENABLED=1 CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8 GOOS=linux GOARCH=arm64 go build
+
+5. CGO_ENABLED=1 CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8 GOOS=linux GOARCH=arm64 go install
+
+Note:
+1. If you get permission issue in step 5:
+    - Make a folder linux_arm64 in {GOROOT}/pkg/
+    - Give all permissions to this folder:
+      $ sudo chmod 777 linux_arm64/
+
+2. Update flags as per your installation directories.
+
+!!!!!! Build & Run EMF samples !!!!!!!!
+
+1. Subscriber sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - $ CGO_ENABLED=1 CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8 GOOS=linux GOARCH=arm64 go build subscriber.go
+       :- It will make an arm64 executable for subscriber sample in same directory.
+
+   - Run the subscriber sample:
+     $ ./subscriber
+
+2. Publisher sample application:
+   - Goto: /home/{UserName}/go/src/go/samples
+
+   - $ CGO_ENABLED=1 CC=/usr/bin/aarch64-linux-gnu-gcc-4.8 CXX=/usr/bin/aarch64-linux-gnu-g++-4.8 GOOS=linux GOARCH=arm64 go build publisher.go
+       :- It will make an arm64 executable for publisher sample in same directory.
+
+   - Run the publisher sample:
+     $ ./publisher
