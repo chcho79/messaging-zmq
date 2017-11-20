@@ -18,8 +18,8 @@ public class EMFEventConverter {
     /**
      * Convert EdgeX event to protocol buffer event byte array.
      *
-     * @param {@link
-     *            Event}
+     * @param event
+     *            {@link Event}
      * @return Converted Protobuf event as byte array.
      */
     public static byte[] toProtoBuf(Event event) {
@@ -57,6 +57,9 @@ public class EMFEventConverter {
 
     /**
      * Convert byte[] array of Protocol buffer event to edgeX event.
+     *
+     * @param event
+     *            Byte array to be converted to Event.
      *
      * @return EdgeX event.
      */
