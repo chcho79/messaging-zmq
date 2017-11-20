@@ -21,5 +21,3 @@ DEP_ROOT=$(pwd)
 cd $PROJECT_ROOT
 mvn clean install -U
 echo "done"
-
-cp /usr/bin/qemu-aarch64-static .

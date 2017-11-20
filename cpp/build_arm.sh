@@ -1,3 +1,2 @@
 #!/bin/bash
-scons TARGET_OS=linux TARGET_ARCH=arm
-
+scons TARGET_ARCH=arm TC_PREFIX=/usr/bin/arm-linux-gnueabi- TC_PATH=/usr/bin/
