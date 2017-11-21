@@ -1,5 +1,5 @@
 #!/bin/bash
-
+./install_dependencies_arm64.sh
 export GOPATH=$pwd
 
 go get github.com/pebbe/zmq4
