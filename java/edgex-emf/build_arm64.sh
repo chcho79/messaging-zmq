@@ -1,8 +1,8 @@
 #!/bin/sh
 PROJECT_ROOT=$(pwd)
 echo $PROJECT_ROOT
-mkdir ../../dependencys
-cd ../../dependencys
+mkdir ../../dependencies
+cd ../../dependencies
 DEP_ROOT=$(pwd)
 
 #Clone and install core-domain service
