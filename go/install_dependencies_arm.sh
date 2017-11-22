@@ -1,6 +1,6 @@
 #!/bin/bash
 CPP_ROOT=$(pwd)
-rm -rf ../dependencies
+FILENAME="protobuf-cpp-3.4.0.tar.gz"
 mkdir ../dependencies
 cd ../dependencies
 
@@ -19,7 +19,12 @@ sudo make install
 sudo ldconfig
 
 cd $DEP_ROOT
-wget https://github.com/google/protobuf/releases/download/v3.4.0/protobuf-cpp-3.4.0.tar.gz
+if [ -e"$FILENAME" ] ; then
+    echo "file exist"
+else
+    wget https://github.com/google/protobuf/releases/download/v3.4.0/protobuf-cpp-3.4.0.tar.gz
+fi
+    rm -rf protobuf-3.4.0/
 tar -xvf protobuf-cpp-3.4.0.tar.gz
 cd protobuf-3.4.0/
 chmod 777 autogen.sh
